@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>93465ceb-b65a-4199-88ee-4d05d023e570</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Phoenix.SharedConfiguration</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\ClaimsPrincipalExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixClaims.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixPermissions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixRoles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\IEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Multitenancy\MultitenancyConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\BasicNotification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\INotificationMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\JobNotification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\NotificationConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\StatsChangedNotification.cs" />
+  </ItemGroup>
+</Project>

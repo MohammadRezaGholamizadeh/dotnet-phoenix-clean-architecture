@@ -1,0 +1,8 @@
+{
+  "ApiVersioning": {
+    "MajorApiVersion": 1,
+    "MinorApiVersion": 0,
+    "AssumeDefaultVersionWhenUnspecified": true,
+    "ReportApiVersions": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "SwaggerConfigurations": {
+    "Version": "v1",
+    "Enable": true,
+    "Title": ".NET 6.0 WebAPI - Clean Architecture",
+    "ContactName": "Phoenix - MohammadReza Gholamizadeh",
+    "ContactUrl": "masteroffire2000@gmail.com",
+    "ContactEmail": "masteroffire2000@gmail.com",
+    "License": true,
+    "LicenseName": "Phoenix MIT License",
+    "LicenseUrl": "",
+    "Description": "Clean Architecture Template for .NET 6.0 WebApi."
+  }
+}
