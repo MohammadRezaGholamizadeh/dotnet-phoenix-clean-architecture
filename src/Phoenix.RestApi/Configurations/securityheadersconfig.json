@@ -1,0 +1,13 @@
+{
+  "SecurityHeaderConfiguration": {
+    "Enable": true,
+    "Headers": {
+      "Referrer_Policy": "same-origin",
+      "X_FrameOptions": "SAMEORIGIN",
+      "X_Content_Type_Options": "nosniff",
+      "X_XSS-Protection": "1; mode=block",
+      "Permissions_Policy": "geolocation=(), camera=()",
+      "SameSite": ""
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "MailConfig": {
+    "DisplayName": "[Phoenix] MohammadReza Gholamizadeh",
+    "From": "",
+    "Host": "smtp.ethereal.email",
+    "Password": "",
+    "Port": 587,
+    "UserName": ""
+  }
+}

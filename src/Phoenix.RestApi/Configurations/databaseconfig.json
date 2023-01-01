@@ -1,0 +1,6 @@
+{
+  "DatabaseSettings": {
+    "DBProvider": "MSSqlServer",
+    "ConnectionString": "server=.;database=PhoenixDb;Trusted_Connection = true;MultipleActiveResultSets=True"
+  }
+}
