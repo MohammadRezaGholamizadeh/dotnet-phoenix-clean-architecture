@@ -2,5 +2,5 @@
 
 internal interface IDatabaseInitializer
 {
-    Task InitializeDatabasesAsync();
+    void InitializeDatabasesAsync();
 }

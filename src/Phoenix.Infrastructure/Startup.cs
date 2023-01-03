@@ -53,14 +53,14 @@ public static class Startup
 
     }
 
-    public static async Task InitializeDatabasesAsync(
+    public static void InitializeDatabasesAsync(
         this IServiceProvider services)
     {
         using (var scope = services.CreateScope())
         {
-            await scope.ServiceProvider
-                       .GetRequiredService<IDatabaseInitializer>()
-                       .InitializeDatabasesAsync();
+             scope.ServiceProvider
+                   .GetRequiredService<IDatabaseInitializer>()
+                   .InitializeDatabasesAsync();
         }
     }
 
