@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phoenix.Domain.MigrationsDomain;
 using Phoenix.Infrastructure.Multitenancy;
@@ -8,34 +9,29 @@ namespace Phoenix.Infrastructure.Persistence.Initialization;
 
 internal class DatabaseInitializer : IDatabaseInitializer
 {
-    private readonly EFDataContext _context;
     private readonly ILogger<DatabaseInitializer> _logger;
+    private readonly IConfiguration _config;
 
     public DatabaseInitializer(
-        EFDataContext context,
-        ILogger<DatabaseInitializer> logger)
+        ILogger<DatabaseInitializer> logger,
+        IConfiguration config)
     {
-        _context = context;
         _logger = logger;
+        _config = config;
     }
-    public async Task InitializeDatabasesAsync()
+    public void InitializeDatabasesAsync()
     {
-        var lastMigrationVersion =
-            typeof(MigrationRunner).Assembly.GetTypes()
-            .Where(_ => _.BaseType == typeof(Migration))
-            .SelectMany(_ => _.CustomAttributes)
-            .Where(_ => _.AttributeType == typeof(MigrationAttribute))
-            .Select(_ => _.GetType().GetProperty("Version").GetValue(_))
-            .OrderByDescending(_ => _).First();
-       
-
-
-        if (!_context.Set<MigrationVersionInfo>().Any()
-            || _context.Set<MigrationVersionInfo>().OrderByDescending(_ => _.Version).First().Version
-             < (long)lastMigrationVersion)
-        {
-            _logger.LogInformation("Applying Root Migrations.");
-            MigrationRunner.Run(new string[] { });
-        }
+        _logger.LogInformation("Applying Root Migrations ...");
+        var connectionString =
+            _config
+            .GetSection("PersistenceConfig")
+            .GetValue<string>("ConnectionString");
+        MigrationRunner.CreateDatabaseSchema(connectionString);
+        Thread.Sleep(3000);
+        MigrationRunner.RunRootMigrations(new string[] { });
+        _logger.LogInformation(
+            Environment.NewLine +
+            "*******  | DataBase Migration Updated Successfully | *******" +
+            Environment.NewLine);
     }
 }

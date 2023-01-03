@@ -9,21 +9,21 @@ namespace Phoenix.Migrations
     {
         public static void Main(string[] args)
         {
-            Run(args);
+            RunRootMigrations(args);
         }
-        public static void Run(string[] args)
+        public static void RunRootMigrations(string[] args)
         {
             var options = GetSettings(args, Directory.GetCurrentDirectory());
 
             var connectionString = options.ConnectionString;
 
-            CreateDatabase(connectionString);
+            CreateDatabaseSchema(connectionString);
 
             var runner = CreateRunner(connectionString, options);
             runner.MigrateUp();
         }
 
-        private static void CreateDatabase(string connectionString)
+        public static void CreateDatabaseSchema(string connectionString)
         {
             var databaseName = GetDatabaseName(connectionString);
             string masterConnectionString = ChangeDatabaseName(

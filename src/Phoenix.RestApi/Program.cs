@@ -1,14 +1,11 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Wordprocessing;
 using FluentValidation.AspNetCore;
 using Phoenix.Infrastructure;
 using Phoenix.Infrastructure.Common;
 using Phoenix.RestApi;
 using Phoenix.RestApi.Configurations;
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
 [assembly: ApiConventionType(typeof(PhoenixApiConventions))]
@@ -33,7 +30,7 @@ try
 
     var app = builder.Build();
 
-    //    await app.Services.InitializeDatabasesAsync();
+    await Task.Run(() => app.Services.InitializeDatabasesAsync());
 
     app.UseInfrastructure(builder.Configuration);
     app.MapEndpoints();
