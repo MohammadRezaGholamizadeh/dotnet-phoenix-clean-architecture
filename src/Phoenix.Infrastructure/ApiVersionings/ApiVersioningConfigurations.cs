@@ -19,6 +19,14 @@ namespace Phoenix.Infrastructure.ApiVersionings
                 $"Default Api Version : " +
                    $"{apiVersion.MajorApiVersion}" +
                    $".{apiVersion.MinorApiVersion}");
+
+            services.AddVersionedApiExplorer(
+                options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
+
             return services.AddApiVersioning(
                    config =>
                    {

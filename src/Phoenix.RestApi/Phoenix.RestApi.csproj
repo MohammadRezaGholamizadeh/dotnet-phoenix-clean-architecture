@@ -1,22 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<DebugSymbols>False</DebugSymbols>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>5ee835c3-0c29-428e-8614-e46e1e28cd80</UserSecretsId>
-		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="Configurations\apiversioningconfig.json" />
+		<Content Remove="Configurations\apiversioningconfig.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <_ContentIncludedByDefault Remove="Configurations\corsconfig.json" />
+		<_ContentIncludedByDefault Remove="Configurations\corsconfig.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -30,8 +35,8 @@
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Configurations\apiversioningconfig.json">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Configurations\cacheconfig.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -78,7 +83,7 @@
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</EmbeddedResource>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
 		<PackageReference Include="Hangfire.Console.Extensions.Serilog" Version="1.0.2" />
@@ -104,16 +109,16 @@
 		<PackageReference Include="Taav.Notification" Version="3.1.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Files\" />
-	  <Folder Include="Logs\" />
-	  <Folder Include="Files\" />
-	  <Folder Include="Plugins\" />
+		<Folder Include="Files\" />
+		<Folder Include="Logs\" />
+		<Folder Include="Files\" />
+		<Folder Include="Plugins\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
-	  <ProjectReference Include="..\Phoenix.Infrastructure\Phoenix.Infrastructure.csproj" />
-	  <ProjectReference Include="..\Phoenix.Persistance.EF\Phoenix.Persistance.EF.csproj" />
-	  <ProjectReference Include="..\Phoenix.Services\Phoenix.Application.csproj" />
+		<ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
+		<ProjectReference Include="..\Phoenix.Infrastructure\Phoenix.Infrastructure.csproj" />
+		<ProjectReference Include="..\Phoenix.Persistance.EF\Phoenix.Persistance.EF.csproj" />
+		<ProjectReference Include="..\Phoenix.Services\Phoenix.Application.csproj" />
 	</ItemGroup>
 
 </Project>
