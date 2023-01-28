@@ -3,19 +3,18 @@ using Autofac.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Phoenix.Infrastructure;
 using Phoenix.Infrastructure.Common;
+using Phoenix.Infrastructure.RoutingConfig;
 using Phoenix.RestApi;
 using Phoenix.RestApi.Configurations;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
 [assembly: ApiConventionType(typeof(PhoenixApiConventions))]
-
 StaticLogger.EnsureInitialized();
 Log.Information("Server Booting Up...");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
     builder.Host.AddConfigurations();
     builder.Host.UseSerilog((_, config) =>
     {
@@ -23,8 +22,12 @@ try
                theme: AnsiConsoleTheme.Literate)
         .ReadFrom.Configuration(builder.Configuration);
     });
+
+    builder.Services.AddControllers()
+                    .AddFluentValidation();
+    builder.Services.AddSwaggerGen();
     builder.WebHost.ConfigureServices(_ => _.AddAutofac());
-    builder.Services.AddControllers().AddFluentValidation();
+    builder.AddServerConfiguration(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApplication();
 
@@ -35,8 +38,6 @@ try
     app.UseInfrastructure(builder.Configuration);
     app.MapEndpoints();
     app.Run();
-
-
 }
 
 catch (Exception ex) when (!ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))

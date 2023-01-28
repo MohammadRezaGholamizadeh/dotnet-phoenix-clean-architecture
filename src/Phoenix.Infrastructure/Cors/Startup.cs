@@ -41,16 +41,21 @@ internal static class Startup
                 .Split(';', StringSplitOptions.RemoveEmptyEntries));
         }
 
+        if (corsSettings.Flutter is not null)
+        {
+            origins.AddRange(
+                corsSettings.Flutter
+                .Split(';', StringSplitOptions.RemoveEmptyEntries));
+        }
 
         return services
                .AddCors(opt =>
                         opt.AddPolicy(
                             CorsPolicy,
-                            policy =>
-                             policy.AllowAnyHeader()
-                                   .AllowAnyMethod()
-                                   .AllowCredentials()
-                                   .WithOrigins(origins.ToArray())));
+                            policy => policy.AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials()
+                                            .WithOrigins(origins.ToArray())));
     }
 
     internal static IApplicationBuilder UseCorsPolicy(

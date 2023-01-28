@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NJsonSchema.Generation.TypeMappers;
-using NSwag;
-using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using ZymLabs.NSwag.FluentValidation;
 
 namespace Phoenix.Infrastructure.OpenApi;
@@ -21,107 +21,53 @@ internal static class OpenApiConfiguration
                   .Get<SwaggerConfigurations>();
         if (settings.Enable)
         {
-           services.AddVersionedApiExplorer(
-               o => o.SubstituteApiVersionInUrl = true);
-           services.AddEndpointsApiExplorer();
-           services.AddOpenApiDocument(
-                (document, serviceProvider) =>
-                {
-                     document.PostProcess = doc =>
-                     {
-                         doc.Info.Title = settings.Title;
-                         doc.Info.Version = settings.Version;
-                         doc.Info.Description = settings.Description;
-                         doc.Info.Contact = new()
-                         {
-                             Name = settings.ContactName,
-                             Email = settings.ContactEmail,
-                             Url = settings.ContactUrl
-                         };
-                         doc.Info.License = new()
-                         {
-                             Name = settings.LicenseName,
-                             Url = settings.LicenseUrl
-                         };
-                     };
-                     
-                     if (config.GetSection("SecurityConfiguration")
-                               .GetValue<string>("Provider")
-                               .Equals("AzureAd", StringComparison.OrdinalIgnoreCase))
-                     {
-                         document.AddSecurity(
-                             JwtBearerDefaults.AuthenticationScheme,
-                             new OpenApiSecurityScheme
-                             {
-                                 Type = OpenApiSecuritySchemeType.OAuth2,
-                                 Flow = OpenApiOAuth2Flow.AccessCode,
-                                 Description = "OAuth2.0 Auth Code with PKCE",
-                                 Flows = new()
-                                 {
-                                     AuthorizationCode = new()
-                                     {
-                                         AuthorizationUrl =
-                                             config.GetSection("SecurityConfiguration")
-                                                   .GetSection("Swagger")
-                                                   .GetValue<string>("AuthorizationUrl"),
-                                         TokenUrl =
-                                             config.GetSection("SecurityConfiguration")
-                                                   .GetSection("Swagger")
-                                                   .GetValue<string>("TokenUrl"),
-                                         Scopes = new Dictionary<string, string>
-                                         {
-                                             { config.GetSection("SecurityConfiguration")
-                                                     .GetSection("Swagger")
-                                                     .GetValue<string>("ApiScope"),
-                                               "access the api"
-                                             }
-                                         }
-                                     }
-                                 }
-                             });
-                     }
-                     else
-                     {
-                         document.AddSecurity(
-                             JwtBearerDefaults.AuthenticationScheme,
-                             new OpenApiSecurityScheme
-                             {
-                                 Name = "Authorization",
-                                 Description = "Input your Bearer token to access this API",
-                                 In = OpenApiSecurityApiKeyLocation.Header,
-                                 Type = OpenApiSecuritySchemeType.Http,
-                                 Scheme = JwtBearerDefaults.AuthenticationScheme,
-                                 BearerFormat = "JWT",
-                             });
-                     }
+            services.AddVersionedApiExplorer(
+                o => o.SubstituteApiVersionInUrl = true);
+            services.AddEndpointsApiExplorer();
 
-                      document.OperationProcessors.Add(
-                          new AspNetCoreOperationSecurityScopeProcessor());
-                      document.OperationProcessors.Add(
-                          new SwaggerGlobalAuthProcessor());
-                     
-                      document.TypeMappers.Add(
-                          new PrimitiveTypeMapper(typeof(TimeSpan),
-                          schema =>
-                          {
-                               schema.Type = NJsonSchema.JsonObjectType.String;
-                               schema.IsNullableRaw = true;
-                               schema.Pattern = 
-                                   @"^([0-9]{1}|(?:0[0-9]|1[0-9]|2[0-3])+):([0-5]?[0-9])  
-                                   (?::([0-5]?[0-9])(?:.(\d{1,9}))?)?$";
-                               schema.Example = "02:00:00";
-                          }));
-                     
-                          document.OperationProcessors.Add(
-                              new SwaggerHeaderAttributeProcessor());
-                          
-                          var fluentValidationSchemaProcessor = 
-                              serviceProvider.CreateScope()
-                                   .ServiceProvider
-                                   .GetService<FluentValidationSchemaProcessor>();
-                          document.SchemaProcessors
-                               .Add(fluentValidationSchemaProcessor);
-                });      
+            services.AddRouting();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(_ => _.FullName);
+                options.OperationFilter<SwaggerHeaderParameter>();
+                var versionProvider =
+                    services
+                    .BuildServiceProvider()
+                    .GetRequiredService<IApiVersionDescriptionProvider>();
+                foreach (var _ in versionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerDoc(_.GroupName, CreateApiInformation(_));
+                }
+
+                options.AddSecurityDefinition(
+                    "Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description = "Example: \"Bearer token\""
+                    });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
             services.AddScoped<FluentValidationSchemaProcessor>();
         }
 
@@ -129,41 +75,90 @@ internal static class OpenApiConfiguration
     }
 
     internal static IApplicationBuilder UseOpenApiDocumentation(
-        this IApplicationBuilder app, 
+        this IApplicationBuilder app,
         IConfiguration config)
     {
         if (config.GetSection("SwaggerConfigurations")
                   .GetValue<bool>("Enable"))
         {
-            app.UseOpenApi();
-            app.UseSwaggerUi3(options =>
+            var provider =
+                app.ApplicationServices
+                .GetRequiredService<IApiVersionDescriptionProvider>();
+            var environment =
+                app.ApplicationServices
+                .GetRequiredService<IHostEnvironment>();
+
+            if (environment.IsDevelopment())
             {
-                options.DefaultModelsExpandDepth = -1;
-                options.DocExpansion = "none";
-                options.TagsSorter = "alpha";
-                if (config.GetSection("SecurityConfiguration")
+                app.UseSwagger(options =>
+                {
+                    options.RouteTemplate = "def/{documentName}/swagger.json";
+                });
+
+                app.UseSwaggerUI(options =>
+                {
+                    options.RoutePrefix = "def";
+
+                    foreach (var _ in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint(
+                           $"{_.GroupName}/swagger.json",
+                           _.GroupName.ToUpperInvariant());
+                    }
+                    options.DocumentTitle = $"Phoenix Clean Architecture API Documentation";
+
+                    if (config.GetSection("SecurityConfiguration")
                           .GetValue<string>("Provider")
                           .Equals("AzureAd", StringComparison.OrdinalIgnoreCase))
-                {
-                    options.OAuth2Client = new OAuth2ClientSettings
                     {
-                        AppName = "Phoenix Api Client",
-                        ClientId =  
-                           config.GetSection("SecurityConfiguration")
-                                 .GetSection("Swagger")
-                                 .GetValue<string>("OpenIdClientId"),
-                        ClientSecret = string.Empty,
-                        UsePkceWithAuthorizationCodeGrant = true,
-                        ScopeSeparator = " "
-                    };
-                    options.OAuth2Client.Scopes
-                       .Add(config.GetSection("SecurityConfiguration")
-                                  .GetSection("Swagger")
-                                  .GetValue<string>("ApiScope"));
-                }
-            });
+                        options.OAuthConfigObject = new OAuthConfigObject()
+                        {
+                            AppName = "Phoenix Api Client",
+                            ClientId =
+                               config.GetSection("SecurityConfiguration")
+                                     .GetSection("Swagger")
+                                     .GetValue<string>("OpenIdClientId"),
+                            ClientSecret = string.Empty,
+                            UsePkceWithAuthorizationCodeGrant = true,
+                            ScopeSeparator = " "
+                        };
+                        options.OAuthConfigObject.Scopes
+                               .Append(config.GetSection("SecurityConfiguration")
+                               .GetSection("Swagger")
+                               .GetValue<string>("ApiScope"));
+                    }
+
+                });
+            }
         }
 
         return app;
+    }
+
+
+    static OpenApiInfo CreateApiInformation(ApiVersionDescription description)
+    {
+        var info = new OpenApiInfo
+        {
+            Title = $"Phoenix Clean Architecture API {description.ApiVersion}",
+            Version = description.ApiVersion.ToString(),
+            Description = "API Documentation.",
+            Contact = new OpenApiContact
+            {
+                Name = "Phoenix Team",
+                Email = "masteroffire2000@gmail.com"
+            },
+            License = new OpenApiLicense
+            {
+                Name = "Phoenix Team",
+            }
+        };
+
+        if (description.IsDeprecated)
+        {
+            info.Description += " This API version has been deprecated.";
+        }
+
+        return info;
     }
 }
