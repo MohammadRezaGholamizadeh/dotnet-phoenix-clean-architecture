@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Phoenix.Application.Common.Exceptions;
-using Phoenix.Application.Common.Interfaces;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
+using static Phoenix.Infrastructure.Notifications.NotificationHub;
 
 namespace Phoenix.Infrastructure.Notifications;
 
 [Authorize]
-public class NotificationHub : Hub, ITransientService
+public class NotificationHub : Hub, NotificationHubService
 {
     private readonly ILogger<NotificationHub> _logger;
 
@@ -37,5 +37,9 @@ public class NotificationHub : Hub, ITransientService
         await base.OnDisconnectedAsync(exception);
 
         _logger.LogInformation("A client disconnected from NotificationHub: {connectionId}", Context.ConnectionId);
+    }
+    public interface NotificationHubService : TransientService
+    {
+
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Phoenix.Infrastructure.Multitenancy;
+using Phoenix.DataSources.Infrastructures.DBContexts;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
 
 namespace Phoenix.Infrastructure.Identity;
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Phoenix.DataSources.Infrastructures.UnitOfWorks;
 using Phoenix.Infrastructure.ApiVersionings;
 using Phoenix.Infrastructure.Auth;
 using Phoenix.Infrastructure.BackgroundJobs;
@@ -13,12 +14,12 @@ using Phoenix.Infrastructure.Localization;
 using Phoenix.Infrastructure.Mailing;
 using Phoenix.Infrastructure.Mapping;
 using Phoenix.Infrastructure.Middleware;
-using Phoenix.Infrastructure.Multitenancy;
 using Phoenix.Infrastructure.Notifications;
 using Phoenix.Infrastructure.OpenApi;
 using Phoenix.Infrastructure.Persistence;
 using Phoenix.Infrastructure.Persistence.Initialization;
 using Phoenix.Infrastructure.SecurityHeaders;
+using Phoenix.SharedConfiguration.Common.Contracts.UnitOfWorks;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -76,8 +77,8 @@ public static class Startup
             .AddPersistence(config)
             .AddRequestLogging(config)
             .AddRouting(options => options.LowercaseUrls = true)
-            .AddServices();
-
+            .AddServices()
+            .AddUnitOfWork();
     }
 
     public static void InitializeDatabasesAsync(
@@ -89,6 +90,12 @@ public static class Startup
                   .GetRequiredService<IDatabaseInitializer>()
                   .InitializeDatabasesAsync();
         }
+    }
+
+    public static IServiceCollection AddUnitOfWork(
+    this IServiceCollection services)
+    {
+       return services.AddScoped<UnitOfWork, EFUnitOfWork>();
     }
 
     public static IApplicationBuilder UseInfrastructure(

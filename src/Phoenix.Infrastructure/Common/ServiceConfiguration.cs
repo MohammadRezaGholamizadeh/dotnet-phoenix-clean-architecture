@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Phoenix.Application.Common.Interfaces;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
 
 namespace Phoenix.Infrastructure.Common;
 
@@ -8,58 +8,57 @@ internal static class ServiceConfiguration
     internal static IServiceCollection AddServices(
         this IServiceCollection services)
     {
-        return services.AddServices(
-                            typeof(ITransientService),
-                            ServiceLifetime.Transient)
-                       .AddServices(
-                            typeof(IScopedService),
-                            ServiceLifetime.Scoped);
-    }
-
-
-    internal static IServiceCollection AddServices(
-        this IServiceCollection services,
-        Type interfaceType,
-        ServiceLifetime lifetime)
-    {
-        var interfaceTypes =
+        var allServices =
             AppDomain.CurrentDomain
                      .GetAssemblies()
-                     .SelectMany(assembly => assembly.GetTypes())
-                     .Where(type => interfaceType.IsAssignableFrom(type)
-                                 && type.IsClass && !type.IsAbstract)
-                     .Select(type => new
+                     .SelectMany(_ => _.GetTypes())
+                     .Where(_ => !_.IsInterface
+                              && _.GetInterfaces()
+                                  .Any(_ => typeof(ScopedService).IsAssignableFrom(_)
+                                         || typeof(TransientService).IsAssignableFrom(_)
+                                         || typeof(SingletonService).IsAssignableFrom(_)))
+                     .Select(service => new
                      {
-                         Service =
-                            type.GetInterfaces().FirstOrDefault(),
-                         Implementation = type
-                     })
-                     .Where(_ => _.Service is not null
-                              && interfaceType.IsAssignableFrom(_.Service));
-
-        foreach (var type in interfaceTypes)
+                         RepositoryType = service,
+                         InterfaceType = service.GetInterfaces()
+                                 .Where(_ => typeof(ScopedService).IsAssignableFrom(_)
+                                          || typeof(TransientService).IsAssignableFrom(_)
+                                          || typeof(SingletonService).IsAssignableFrom(_))
+                                 .ToList()
+                     });
+        if (allServices.Any(_ => _.InterfaceType.Count > 2))
         {
-            services.AddService(type.Service!, type.Implementation, lifetime);
+            throw new InvalidOperationException(
+                "Each Service Can Have Just One LifeTime And Same As Its Service LifeTime !!!");
+        }
+        foreach (var service in allServices)
+        {
+            if (service.InterfaceType.Any(_ => _ == typeof(ScopedService)))
+            {
+                services.AddScoped(
+                         service.InterfaceType.Single(_ => _ != typeof(ScopedService)),
+                         service.RepositoryType);
+            }
+
+            else if (service.InterfaceType.Any(_ => _ == typeof(TransientService)))
+            {
+                services.AddTransient(
+                         service.InterfaceType.Single(_ => _ != typeof(TransientService)),
+                         service.RepositoryType);
+            }
+            else if (service.InterfaceType.Any(_ => _ == typeof(SingletonService)))
+            {
+                services.AddSingleton(
+                         service.InterfaceType.Single(_ => _ != typeof(SingletonService)),
+                         service.RepositoryType);
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"Can Not Inject Type: {service.RepositoryType} Successfully !!!");
+            }
         }
 
         return services;
-    }
-
-    internal static IServiceCollection AddService(
-        this IServiceCollection services,
-        Type serviceType,
-        Type implementationType,
-        ServiceLifetime lifetime)
-    {
-        return lifetime switch
-        {
-            ServiceLifetime.Transient => 
-                services.AddTransient(serviceType, implementationType),
-            ServiceLifetime.Scoped => 
-                services.AddScoped(serviceType, implementationType),
-            ServiceLifetime.Singleton => 
-                services.AddSingleton(serviceType, implementationType),
-            _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
-        };
     }
 }

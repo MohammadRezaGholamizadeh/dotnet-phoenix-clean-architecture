@@ -65,6 +65,7 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Phoenix.DataSources.Infrastructures\Phoenix.DataSources.Infrastructures.csproj" />
 	  <ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
 	  <ProjectReference Include="..\Phoenix.Migrations\Phoenix.Migrations.csproj" />
 	  <ProjectReference Include="..\Phoenix.Persistance.EF\Phoenix.Persistance.EF.csproj" />

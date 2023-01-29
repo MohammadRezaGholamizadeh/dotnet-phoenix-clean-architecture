@@ -1,5 +1,5 @@
 ﻿namespace Phoenix.Application.Common.Caching;
-using Phoenix.Domain.Common.Contracts;
+using Phoenix.SharedConfiguration.Common.Contracts;
 
 public static class CacheKeyServiceExtensions
 {

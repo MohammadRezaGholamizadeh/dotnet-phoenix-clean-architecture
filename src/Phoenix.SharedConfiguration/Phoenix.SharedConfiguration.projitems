@@ -9,11 +9,37 @@
     <Import_RootNamespace>Phoenix.SharedConfiguration</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Audit\Trail.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Audit\TrailType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\ClaimsPrincipalExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixClaims.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixPermissions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixRoles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationRoleClaim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationRoles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationUser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\RegisterUserEmailModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\AuditableEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\BaseEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\DomainEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\IAggregateRoot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\IAuditableEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\IEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\ISoftDelete.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\ScopedRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\SingletonRepository.cs" />
+    <Compile Include="..\Phoenix.SharedConfiguration\Common\Contracts\Repositories\TransientRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Services\SingletonService.cs" />
+    <Compile Include="..\Phoenix.SharedConfiguration\Common\Contracts\Services\TransientService.cs" />
+    <Compile Include="..\Phoenix.SharedConfiguration\Common\Contracts\Services\ScopedService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\UnitOfWorks\UnitOfWork.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Events\EntityCreatedEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Events\EntityDeletedEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Events\EntityUpdatedEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\FileType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\IEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Identity\ApplicationRoleEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Identity\ApplicationUserEvents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multitenancy\MultitenancyConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifications\BasicNotification.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifications\INotificationMessage.cs" />

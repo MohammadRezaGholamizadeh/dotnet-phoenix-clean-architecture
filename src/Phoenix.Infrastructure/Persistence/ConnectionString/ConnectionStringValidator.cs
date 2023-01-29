@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MySqlConnector;
-using Npgsql;
 using System.Data.SqlClient;
 using Phoenix.Infrastructure.Common;
 using Phoenix.Application.Common.Persistence;

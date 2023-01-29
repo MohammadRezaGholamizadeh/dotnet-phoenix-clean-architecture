@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Infrastructure.Common;
-using Phoenix.SharedConfiguration.Multitenancy;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
 
 namespace Phoenix.Infrastructure.Identity;
 

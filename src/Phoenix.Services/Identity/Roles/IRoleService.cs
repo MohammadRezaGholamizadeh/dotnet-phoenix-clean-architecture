@@ -1,7 +1,8 @@
-using Phoenix.Application.Common.Interfaces;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
+
 namespace Phoenix.Application.Identity.Roles;
 
-public interface IRoleService : ITransientService
+public interface IRoleService : TransientService
 {
     Task<List<RoleDto>> GetListAsync(CancellationToken cancellationToken);
 

@@ -4,9 +4,10 @@ using Microsoft.Identity.Web;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Application.Common.Mailing;
 using Phoenix.Application.Identity.Users;
-using Phoenix.Domain.Common;
-using Phoenix.Domain.Identity;
 using Phoenix.SharedConfiguration.Authorization;
+using Phoenix.SharedConfiguration.Common;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
+using Phoenix.SharedConfiguration.Identity;
 using System.Security.Claims;
 
 namespace Phoenix.Infrastructure.Identity;

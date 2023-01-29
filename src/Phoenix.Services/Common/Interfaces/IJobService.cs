@@ -1,8 +1,9 @@
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
 using System.Linq.Expressions;
 
 namespace Phoenix.Application.Common.Interfaces;
 
-public interface IJobService : ITransientService
+public interface IJobService : TransientService
 {
     string Enqueue(Expression<Action> methodCall);
 

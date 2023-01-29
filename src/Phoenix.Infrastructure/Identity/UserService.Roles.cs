@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Application.Identity.Users;
-using Phoenix.Domain.Identity;
 using Phoenix.SharedConfiguration.Authorization;
+using Phoenix.SharedConfiguration.Identity;
 using Phoenix.SharedConfiguration.Multitenancy;
 
 namespace Phoenix.Infrastructure.Identity;

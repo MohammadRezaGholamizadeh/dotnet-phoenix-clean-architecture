@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Phoenix.Application.Common.Caching;
 using Phoenix.Application.Common.Events;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Application.Common.FileStorage;
@@ -14,10 +13,12 @@ using Phoenix.Application.Common.Mailing;
 using Phoenix.Application.Common.Models;
 using Phoenix.Application.Common.Specification;
 using Phoenix.Application.Identity.Users;
-using Phoenix.Domain.Identity;
+using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.Infrastructure.Auth;
-using Phoenix.Infrastructure.Multitenancy;
+
 using Phoenix.SharedConfiguration.Authorization;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
+using Phoenix.SharedConfiguration.Identity;
 
 namespace Phoenix.Infrastructure.Identity;
 

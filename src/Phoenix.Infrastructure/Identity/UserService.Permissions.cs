@@ -1,8 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Phoenix.Application.Common.Caching;
+﻿using Microsoft.EntityFrameworkCore;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.SharedConfiguration.Authorization;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
 
 namespace Phoenix.Infrastructure.Identity;
 

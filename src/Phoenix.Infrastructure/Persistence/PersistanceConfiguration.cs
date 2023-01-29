@@ -3,12 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Phoenix.Application.Common.Persistence;
-using Phoenix.Domain.Common.Contracts;
+using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.Infrastructure.Common;
-using Phoenix.Infrastructure.Multitenancy;
 using Phoenix.Infrastructure.Persistence.ConnectionString;
 using Phoenix.Infrastructure.Persistence.Initialization;
-using Phoenix.Infrastructure.Persistence.Repository;
+using Phoenix.Persistance.EF.Repositories;
+using Phoenix.SharedConfiguration.Common.Contracts.Repositories;
 using Serilog;
 
 namespace Phoenix.Infrastructure.Persistence;
@@ -49,7 +49,6 @@ internal static class PersistanceConfiguration
                          databaseSettings.ConnectionString);
             })
             .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
-            .AddServices(typeof(ICustomSeeder), ServiceLifetime.Transient)
             .AddTransient<CustomSeederRunner>()
             .AddTransient<IConnectionStringSecurer, ConnectionStringSecurer>()
             .AddTransient<IConnectionStringValidator, ConnectionStringValidator>()
@@ -80,32 +79,55 @@ internal static class PersistanceConfiguration
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
+        var repositories =
+            typeof(RepositoryAssemblyBase)
+            .Assembly
+            .GetExportedTypes()
+            .Where(s => s.GetInterfaces()
+                         .Any(_ => typeof(ScopedRepository).IsAssignableFrom(_)
+                                || typeof(TransientRepository).IsAssignableFrom(_)
+                                || typeof(SingletonRepository).IsAssignableFrom(_)))
+            .Select(_ => new
+            {
+                RepositoryType = _,
+                InterfaceType = _.GetInterfaces()
+                                 .Where(_ => typeof(ScopedRepository).IsAssignableFrom(_)
+                                          || typeof(TransientRepository).IsAssignableFrom(_)
+                                          || typeof(SingletonRepository).IsAssignableFrom(_))
+                                 .ToList()
+            });
 
-        foreach (var aggregateRootType in typeof(IAggregateRoot).Assembly
-                                          .GetExportedTypes()
-                                          .Where(type
-                                             => typeof(IAggregateRoot)
-                                                .IsAssignableFrom(type)
-                                             && type.IsClass)
-                                          .ToList())
+        if (repositories.Any(_ => _.InterfaceType.Count > 2))
         {
-            services
-                .AddScoped(typeof(IReadRepository<>)
-                           .MakeGenericType(aggregateRootType),
-                           serviceProvider => 
-                                serviceProvider.GetRequiredService(typeof(IRepository<>)
-                                               .MakeGenericType(aggregateRootType)))
-                .AddScoped(typeof(IRepositoryWithEvents<>)
-                           .MakeGenericType(aggregateRootType),
-                           serviceProvider => 
-                                Activator.CreateInstance(typeof(EventAddingRepositoryDecorator<>)
-                                         .MakeGenericType(aggregateRootType),
-                           serviceProvider.GetRequiredService(typeof(IRepository<>)
-                                          .MakeGenericType(aggregateRootType)))
-                ?? throw new InvalidOperationException(
-                    $"Couldn't create EventAddingRepositoryDecorator " +
-                    $"for aggregateRootType {aggregateRootType.Name}"));
+            throw new InvalidOperationException(
+                "Each Repository Can Have Just One LifeTime And Same As Its Service LifeTime !!!");
+        }
+        foreach (var repository in repositories)
+        {
+            if (repository.InterfaceType.Any(_ => _ == typeof(ScopedRepository)))
+            {
+                services.AddScoped(
+                         repository.InterfaceType.Single(_ => _ != typeof(ScopedRepository)),
+                         repository.RepositoryType);
+            }
+
+            else if (repository.InterfaceType.Any(_ => _ == typeof(TransientRepository)))
+            {
+                services.AddTransient(
+                         repository.InterfaceType.Single(_ => _ != typeof(TransientRepository)),
+                         repository.RepositoryType);
+            }
+            else if (repository.InterfaceType.Any(_ => _ == typeof(SingletonRepository)))
+            {
+                services.AddSingleton(
+                         repository.InterfaceType.Single(_ => _ != typeof(SingletonRepository)),
+                         repository.RepositoryType);
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"Can Not Inject Type: {repository.RepositoryType} Successfully !!!");
+            }
         }
 
         return services;
