@@ -7,9 +7,11 @@
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Phoenix.DataSources.Infrastructures\Phoenix.DataSources.Infrastructures.csproj" />
 	  <ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
+	  <ProjectReference Include="..\Phoenix.Services\Phoenix.Application.csproj" />
 	</ItemGroup>
 </Project>

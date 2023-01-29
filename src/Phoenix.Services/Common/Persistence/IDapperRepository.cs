@@ -1,10 +1,10 @@
 using System.Data;
-using Phoenix.Application.Common.Interfaces;
-using Phoenix.Domain.Common.Contracts;
+using Phoenix.SharedConfiguration.Common.Contracts;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
 
 namespace Phoenix.Application.Common.Persistence;
 
-public interface IDapperRepository : ITransientService
+public interface IDapperRepository : TransientService
 {
     /// <summary>
     /// Get an <see cref="IReadOnlyList{T}"/> using raw sql string with parameters.

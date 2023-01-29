@@ -1,7 +1,8 @@
-using Phoenix.Application.Common.Interfaces;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
+
 namespace Phoenix.Application.Common.Mailing;
 
-public interface IMailService : ITransientService
+public interface IMailService : TransientService
 {
     Task SendAsync(MailRequest request, CancellationToken ct);
 }

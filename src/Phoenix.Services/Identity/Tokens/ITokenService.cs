@@ -1,7 +1,8 @@
-using Phoenix.Application.Common.Interfaces;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
+
 namespace Phoenix.Application.Identity.Tokens;
 
-public interface ITokenService : ITransientService
+public interface ITokenService : TransientService
 {
     Task<TokenResponse> GetTokenAsync(TokenRequest request, string ipAddress, CancellationToken cancellationToken);
 

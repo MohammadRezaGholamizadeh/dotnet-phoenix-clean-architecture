@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
 using Phoenix.Application.Common.Events;
 using Phoenix.Application.Common.Interfaces;
-using Phoenix.Domain.Common.Contracts;
 using Phoenix.Infrastructure.Auditing;
+using Phoenix.SharedConfiguration.Common.Contracts;
 
 namespace Phoenix.Infrastructure.Persistence.Context;
 

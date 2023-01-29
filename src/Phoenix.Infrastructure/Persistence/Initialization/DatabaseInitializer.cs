@@ -1,8 +1,6 @@
-﻿using FluentMigrator;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Phoenix.Domain.MigrationsDomain;
-using Phoenix.Infrastructure.Multitenancy;
+
 using Phoenix.Migrations;
 
 namespace Phoenix.Infrastructure.Persistence.Initialization;

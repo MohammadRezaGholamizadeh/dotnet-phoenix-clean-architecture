@@ -112,6 +112,7 @@
 		<Folder Include="Files\" />
 		<Folder Include="Logs\" />
 		<Folder Include="Files\" />
+		<Folder Include="Files\" />
 		<Folder Include="Plugins\" />
 	</ItemGroup>
 	<ItemGroup>

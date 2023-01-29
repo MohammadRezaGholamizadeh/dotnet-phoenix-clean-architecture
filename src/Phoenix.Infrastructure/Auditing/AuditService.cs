@@ -1,7 +1,7 @@
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Application.Auditing;
-using Phoenix.Infrastructure.Multitenancy;
+using Phoenix.DataSources.Infrastructures.DBContexts;
 
 namespace Phoenix.Infrastructure.Auditing;
 

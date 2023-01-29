@@ -3,10 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Serilog;
-using Phoenix.Infrastructure.Multitenancy;
+
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Application.Identity.Users;
 using System.Security.Claims;
+using Phoenix.DataSources.Infrastructures.DBContexts;
 
 namespace Phoenix.Infrastructure.Auth.AzureAd;
 

@@ -1,11 +1,11 @@
-using Phoenix.Application.Common.Interfaces;
 using Phoenix.Application.Common.Models;
 using Phoenix.Application.Identity.Users.Password;
+using Phoenix.SharedConfiguration.Common.Contracts.Services;
 using System.Security.Claims;
 
 namespace Phoenix.Application.Identity.Users;
 
-public interface IUserService : ITransientService
+public interface IUserService : TransientService
 {
     Task<PaginationResponse<UserDetailsDto>> SearchAsync(UserListFilter filter, CancellationToken cancellationToken);
 

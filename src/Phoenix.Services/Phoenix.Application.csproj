@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Colors\Exceptions\" />
+  </ItemGroup>
+
 </Project>

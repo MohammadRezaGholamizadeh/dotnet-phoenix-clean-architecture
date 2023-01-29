@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Phoenix.Application.Common.FileStorage;
-using Phoenix.Domain.Common;
 using Phoenix.Infrastructure.Common.Extensions;
+using Phoenix.SharedConfiguration.Common;
 
 namespace Phoenix.Infrastructure.FileStorage;
 

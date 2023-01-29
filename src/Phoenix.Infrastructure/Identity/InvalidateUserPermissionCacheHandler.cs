@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Phoenix.Application.Common.Events;
 using Phoenix.Application.Identity.Users;
-using Phoenix.Domain.Identity;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
+using Phoenix.SharedConfiguration.Identity;
 
 namespace Phoenix.Infrastructure.Identity;
 

@@ -6,10 +6,10 @@ using Phoenix.Application.Common.Events;
 using Phoenix.Application.Common.Exceptions;
 using Phoenix.Application.Common.Interfaces;
 using Phoenix.Application.Identity.Roles;
-using Phoenix.Domain.Identity;
-using Phoenix.Infrastructure.Multitenancy;
+using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.SharedConfiguration.Authorization;
-using Phoenix.SharedConfiguration.Multitenancy;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
+using Phoenix.SharedConfiguration.Identity;
 
 namespace Phoenix.Infrastructure.Identity;
 

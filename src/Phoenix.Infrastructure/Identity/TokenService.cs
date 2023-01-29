@@ -11,6 +11,7 @@ using Phoenix.Application.Identity.Tokens;
 using Phoenix.Infrastructure.Auth;
 using Phoenix.Infrastructure.Auth.Jwt;
 using Phoenix.SharedConfiguration.Authorization;
+using Phoenix.SharedConfiguration.Common.ApplicationUsers;
 
 namespace Phoenix.Infrastructure.Identity;
 

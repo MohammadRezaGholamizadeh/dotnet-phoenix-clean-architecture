@@ -1,7 +1,8 @@
-﻿using Phoenix.SharedConfiguration.Notifications;
+﻿using Phoenix.SharedConfiguration.Common.Contracts.Services;
+using Phoenix.SharedConfiguration.Notifications;
 namespace Phoenix.Application.Common.Interfaces;
 
-public interface INotificationSender : ITransientService
+public interface INotificationSender : TransientService
 {
     Task BroadcastAsync(INotificationMessage notification, CancellationToken cancellationToken);
     Task BroadcastAsync(INotificationMessage notification, IEnumerable<string> excludedConnectionIds, CancellationToken cancellationToken);

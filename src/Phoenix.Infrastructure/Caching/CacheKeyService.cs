@@ -1,6 +1,4 @@
-﻿using Phoenix.Application.Common.Caching;
-
-namespace Phoenix.Infrastructure.Caching;
+﻿namespace Phoenix.Infrastructure.Caching;
 
 //public class CacheKeyService
 //: ICacheKeyService

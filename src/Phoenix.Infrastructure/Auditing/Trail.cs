@@ -1,4 +1,4 @@
-using Phoenix.Domain.Common.Contracts;
+using Phoenix.SharedConfiguration.Common.Contracts;
 
 namespace Phoenix.Infrastructure.Auditing;
 
