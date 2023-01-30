@@ -1,4 +1,4 @@
-﻿namespace Phoenix.Persistance.EF.Repositories
+﻿namespace Phoenix.Persistance.EF.Infrastructures
 {
     public class RepositoryAssemblyBase
     {

@@ -62,6 +62,7 @@ public static class Startup
 
 
         return services
+            .AddEFDataContext(config)
             .AddHttpContextAccessor()
             .AddApiVersioning(config)
             .AddAuth(config)
@@ -71,7 +72,6 @@ public static class Startup
             .AddExceptionMiddleware()
             .AddPOLocalization(config)
             .AddMailing(config)
-            .AddEFDataContext(config)
             .AddNotifications(config)
             .AddOpenApiDocumentation(config)
             .AddPersistence(config)

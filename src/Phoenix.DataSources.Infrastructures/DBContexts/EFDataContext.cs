@@ -6,8 +6,10 @@ namespace Phoenix.DataSources.Infrastructures.DBContexts
 {
     public class EFDataContext : DbContext
     {
-        public EFDataContext(DbContextOptions<EFDataContext> options)
-            : base(options)
+        private string _connectionString;
+
+        public EFDataContext(
+            DbContextOptions<EFDataContext> options) : base(options)
         {
         }
 
