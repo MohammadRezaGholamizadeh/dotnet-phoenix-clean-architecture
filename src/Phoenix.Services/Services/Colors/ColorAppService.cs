@@ -7,14 +7,14 @@ namespace Phoenix.Application.Services.Colors
 {
     public class ColorAppService : ColorService
     {
-        private readonly ColorRepository _scope;
+        private readonly ColorRepository _repository;
         private readonly UnitOfWork _unitOfWork;
 
         public ColorAppService(
             ColorRepository colorRepository,
             UnitOfWork unitOfWork)
         {
-            _scope = colorRepository;
+            _repository = colorRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,9 @@ namespace Phoenix.Application.Services.Colors
             {
                 Title = dto.Title
             };
-            _scope.Add(color);
+            _repository.Add(color);
             await _unitOfWork.SaveAllChangesAsync();
             return color.Id;
-
         }
     }
 }

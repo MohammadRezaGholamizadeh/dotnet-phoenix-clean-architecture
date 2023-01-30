@@ -7,7 +7,7 @@ using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.Infrastructure.Common;
 using Phoenix.Infrastructure.Persistence.ConnectionString;
 using Phoenix.Infrastructure.Persistence.Initialization;
-using Phoenix.Persistance.EF.Repositories;
+using Phoenix.Persistance.EF.Infrastructures;
 using Phoenix.SharedConfiguration.Common.Contracts.Repositories;
 using Serilog;
 

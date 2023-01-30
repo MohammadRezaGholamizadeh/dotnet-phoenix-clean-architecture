@@ -1,0 +1,3 @@
+{
+  "DbConnectionString": "server=.;database=PhoenixDb-SpecTest;Trusted_connection = True;"
+}

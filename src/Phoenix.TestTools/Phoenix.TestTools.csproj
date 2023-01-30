@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoServiceContainer" Version="1.5.0" />
+  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="dataBaseSettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</EmbeddedResource>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Phoenix.Infrastructure\Phoenix.Infrastructure.csproj" />
+    <ProjectReference Include="..\Phoenix.Services\Phoenix.Application.csproj" />
+  </ItemGroup>
+
+</Project>
