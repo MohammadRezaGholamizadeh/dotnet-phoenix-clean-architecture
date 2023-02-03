@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Phoenix.DataSources.Infrastructures.DBContexts;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Phoenix.TestTools.Tools.Buliders
@@ -39,6 +40,14 @@ namespace Phoenix.TestTools.Tools.Buliders
 
         public TEntity Build()
         {
+            return (TEntity)entity;
+        }
+
+        public async Task<TEntity> BuildAndSaveInDataBase(
+            EFDataContext context)
+        {
+            await context.Add((TEntity)entity)
+                         .Context.SaveChangesAsync();
             return (TEntity)entity;
         }
     }

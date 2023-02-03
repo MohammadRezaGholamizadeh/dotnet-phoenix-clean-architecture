@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Phoenix.Application.Common.Tokens;
 using Phoenix.Application.Infrastructures.TokenManagements.Contracts;
 using Phoenix.Application.Services.ApplicationUsers.Contracts;
 using Phoenix.Domain.Entities.ApplicationUsers;
-using Phoenix.Infrastructure.Tokens;
+using Phoenix.Infrastructure.Middleware.Attributes;
 
 namespace Phoenix.RestApi.Controllers.ApplicationUsers
 {
@@ -26,6 +27,7 @@ namespace Phoenix.RestApi.Controllers.ApplicationUsers
         }
 
         [HttpPost("login")]
+        [JumpOverMiddleWare]
         public async Task<string> LogIn(ApplicationUserLoginDto dto)
         {
             var applicationUser =

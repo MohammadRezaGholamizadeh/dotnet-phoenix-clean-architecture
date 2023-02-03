@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Phoenix.Application.Common.Tokens;
 using Phoenix.Application.Infrastructures.TokenManagements.Contracts;
-using Phoenix.Infrastructure.Tokens;
 using Phoenix.SharedConfiguration.Common.Contracts.Services;
 
 namespace Phoenix.Infrastructure.Common;
@@ -11,7 +11,7 @@ internal static class ServiceConfiguration
         this IServiceCollection services)
     {
         services.AddScoped(typeof(JwtBearerTokenConfig));
-        services.AddScoped<UserTokenService , UserTokenAppService>();
+        services.AddScoped<UserTokenService, UserTokenAppService>();
         var allServices =
             AppDomain.CurrentDomain
                      .GetAssemblies()

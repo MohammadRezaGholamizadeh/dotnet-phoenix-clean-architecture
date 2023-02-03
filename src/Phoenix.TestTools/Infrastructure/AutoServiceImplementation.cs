@@ -2,6 +2,8 @@
 using AutoServiceContainer;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using Phoenix.Application.Common.Tokens;
 using Phoenix.Application.Services.Colors;
 using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.DataSources.Infrastructures.UnitOfWorks;
@@ -74,8 +76,10 @@ namespace Phoenix.TestTools.Infrastructure
             string connectionString = GetConnectionString();
             var constructorParameters =
                 AutoServiceTools.MockObjectListCreator();
-            //constructorParameters
-            //.AddMockedParameter(typeof(string), connectionString);
+            var userTokenService = new Mock<UserTokenService>();
+            userTokenService.Setup(_ => _.TenantId).Returns("1");
+            constructorParameters
+            .AddMockedParameter(typeof(UserTokenService), userTokenService.Object);
             return new InMemoryDataBase()
                 .CreateInMemoryDataContext<EFDataContext>(
                 sqliteConnection,
@@ -84,7 +88,9 @@ namespace Phoenix.TestTools.Infrastructure
 
         public override DbContext SqlServerConfiguration()
         {
-            return new EFDataContext(GetConnectionString());
+            var userTokenService = new Mock<UserTokenService>();
+            userTokenService.Setup(_ => _.TenantId).Returns("1");
+            return new EFDataContext(GetConnectionString() , userTokenService.Object);
         }
     }
 }

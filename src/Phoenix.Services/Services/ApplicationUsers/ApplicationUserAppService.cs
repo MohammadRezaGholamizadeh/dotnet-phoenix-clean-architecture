@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Phoenix.Application.Common.Tokens;
 using Phoenix.Application.Infrastructures.TokenManagements.Contracts;
 using Phoenix.Application.Services.ApplicationUsers.Contracts;
 using Phoenix.Application.Services.ApplicationUsers.Exceptions;
@@ -16,17 +17,37 @@ namespace Phoenix.Application.Services.ApplicationUsers
         private readonly ApplicationUserRepository _repository;
         private readonly TokenManagementService _tokenManagementService;
         private readonly UnitOfWork _unitOfWork;
+        private readonly UserTokenService _userTokenService;
 
         public ApplicationUserAppService(
             UserManager<ApplicationUser> userManager,
             ApplicationUserRepository repository,
             TokenManagementService tokenManager,
-            UnitOfWork unitOfWork)
+            UnitOfWork unitOfWork,
+            UserTokenService userTokenService)
         {
             _userManager = userManager;
             _repository = repository;
             _tokenManagementService = tokenManager;
             _unitOfWork = unitOfWork;
+            _userTokenService = userTokenService;
+        }
+        public async Task<string> AddSuperAdminUserForSeedData(
+            ApplicationUser adminUser)
+        {
+            await GuardAgainstDuplicateUser(string.Empty, adminUser.NationalCode);
+            GaurdAgainstInvalidNationalCode(adminUser.NationalCode);
+            GaurdAgainstInvalidMobileNumber(adminUser.Mobile.MobileNumber);
+            var processResult =
+                await _userManager
+                      .CreateAsync(
+                           adminUser,
+                           adminUser.NationalCode);
+
+            GuardAgainstFailedRegisteration(processResult);
+
+            await _unitOfWork.SaveAllChangesAsync();
+            return adminUser.Id;
         }
         public async Task<string> AddUser(AddApplicationUserDto dto)
         {
@@ -41,6 +62,7 @@ namespace Phoenix.Application.Services.ApplicationUsers
                 .With(_ => _.UserName, dto.NationalCode)
                 .With(_ => _.FirstName, dto.FirstName)
                 .With(_ => _.LastName, dto.LastName)
+                .With(_ => _.TenantId, _userTokenService.TenantId)
                 .With(_ => _.Mobile, new Mobile()
                 {
                     CountryCallingCode = dto.CountryCallingCode,
@@ -238,9 +260,9 @@ namespace Phoenix.Application.Services.ApplicationUsers
                 throw new CurrentPasswordIsNotCorrectException();
         }
 
-        public async Task<bool> IsExistNationalCcode(string nationalCode)
+        public async Task<bool> IsExistNationalCode(string nationalCode)
         {
-            return await _repository.IsExistByNationalCode(nationalCode);
+            return await _repository.IsExistByNationalCodeInAllTenants(nationalCode);
         }
     }
 }

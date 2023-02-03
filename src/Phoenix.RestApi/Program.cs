@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Phoenix.Infrastructure;
 using Phoenix.Infrastructure.Common;
+using Phoenix.Infrastructure.Middleware;
 using Phoenix.Infrastructure.RoutingConfig;
 using Phoenix.RestApi;
 using Phoenix.RestApi.Configurations;
@@ -23,8 +24,12 @@ try
         .ReadFrom.Configuration(builder.Configuration);
     });
 
-    builder.Services.AddControllers()
-                    .AddFluentValidation();
+    builder.Services
+           .AddControllers(_ =>
+           {
+               _.Filters.Add<TenantActivationStateMiddleWare>(1);
+           })
+           .AddFluentValidation();
     builder.Services.AddSwaggerGen();
     builder.WebHost.ConfigureServices(_ => _.AddAutofac());
     builder.AddServerConfiguration(builder.Configuration);

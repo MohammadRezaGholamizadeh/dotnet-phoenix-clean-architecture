@@ -40,7 +40,7 @@ internal class ExceptionMiddleware : IMiddleware
 
             var userId = _currentUser.GetUserId();
 
-            string tenant = 
+            string tenant =
                 _currentUser.GetTenant() ?? string.Empty;
 
             if (userId != Guid.Empty)
@@ -63,7 +63,7 @@ internal class ExceptionMiddleware : IMiddleware
 
             var errorResult = new ErrorResult
             {
-                Source = 
+                Source =
                    exception.TargetSite?.DeclaringType?.FullName,
                 Exception = exception.Message.Trim(),
                 ErrorId = errorId,
@@ -71,7 +71,12 @@ internal class ExceptionMiddleware : IMiddleware
                    _stringLocalizer["Provide the ErrorId {0} to " +
                    "the support team for further analysis.", errorId]
             };
-            errorResult.Messages.Add(exception.Message);
+            errorResult.Messages.Add(
+                exception.Message
+                         .TrimEnd('.')
+                         .Split('.')
+                         .LastOrDefault()?
+                         .Replace("Exception", string.Empty));
             if (exception is not CustomException
                 && exception.InnerException != null)
             {
@@ -98,7 +103,7 @@ internal class ExceptionMiddleware : IMiddleware
                     break;
 
                 default:
-                    errorResult.StatusCode = 
+                    errorResult.StatusCode =
                       (int)HttpStatusCode.InternalServerError;
                     break;
             }

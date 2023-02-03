@@ -1,11 +1,21 @@
 {
-  "AdminSeedData": {
+  "SuperAdminSeedData": {
     "FirstName": "Administrator",
     "LastName": "Administrator",
     "NationalCode": "1111111111",
+    "UserName": "1111111111",
     "Mobile": {
       "CountryCallingCode": "+98",
       "MobileNumber": "9999999999"
+    },
+    "Tenant": {
+      "Id": "87315f37-9a81-4520-8f67-69583ad85bc5",
+      "Name": "PhoenixSuperTenant",
+      "Mobile": {
+        "MobileNumber": "9999999999",
+        "CountryCallingCode": "+98"
+      },
+      "Email": "masteroffire2000@gmail.com"
     }
   }
 }

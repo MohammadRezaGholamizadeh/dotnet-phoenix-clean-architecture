@@ -121,9 +121,9 @@ namespace Phoenix.Persistance.EF.Repositories.ApplicationUsers
                    .SingleOrDefault(_ => _.NormalizedName == roleName.ToUpper())?.Id;
         }
 
-        public async Task<bool> IsExistByNationalCode(string nationalCode)
+        public async Task<bool> IsExistByNationalCodeInAllTenants(string nationalCode)
         {
-            return await _applicationUsers.AnyAsync(_ => _.NationalCode == nationalCode);
+            return await _applicationUsers.IgnoreQueryFilters().AnyAsync(_ => _.NationalCode == nationalCode);
         }
     }
 }

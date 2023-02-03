@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Phoenix.Domain.Entities.Tenants;
+using Phoenix.SharedConfiguration.Multitenancy;
 
 namespace Phoenix.Domain.Entities.ApplicationUsers
 {
-    public class ApplicationUser : IdentityUser<string>
+    public class ApplicationUser : IdentityUser<string>, ITenant
     {
         public ApplicationUser()
         {
@@ -15,5 +17,7 @@ namespace Phoenix.Domain.Entities.ApplicationUsers
         public DateTime CreationDate { get; set; }
         public string? MobileNumber { get => Mobile.CountryCallingCode + Mobile.MobileNumber; }
         public bool IsActive { get; set; }
+        public string TenantId { get; set; }
+        public Tenant Tenant { get; set; }
     }
 }
