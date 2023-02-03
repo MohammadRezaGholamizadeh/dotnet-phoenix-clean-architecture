@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Phoenix.DataSources.Infrastructures.EntityMaps.EF.MigrationsDomain;
+using Phoenix.Domain.Entities.ApplicationUsers;
 using System.Data;
 
 namespace Phoenix.DataSources.Infrastructures.DBContexts
 {
-    public class EFDataContext : DbContext
+    public class EFDataContext : IdentityDataContext
     {
-        private string _connectionString;
-
         public EFDataContext(
             DbContextOptions<EFDataContext> options) : base(options)
         {

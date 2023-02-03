@@ -1,6 +1,7 @@
-﻿namespace Phoenix.Infrastructure.Persistence.Initialization;
-
-internal interface IDatabaseInitializer
+﻿namespace Phoenix.Infrastructure.Persistence.Initialization
 {
-    void InitializeDatabasesAsync();
+    internal interface IDatabaseInitializer
+    {
+        void InitializeDatabasesAsync();
+    }
 }

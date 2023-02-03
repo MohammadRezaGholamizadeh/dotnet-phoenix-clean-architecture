@@ -1,0 +1,11 @@
+{
+  "AdminSeedData": {
+    "FirstName": "Administrator",
+    "LastName": "Administrator",
+    "NationalCode": "1111111111",
+    "Mobile": {
+      "CountryCallingCode": "+98",
+      "MobileNumber": "9999999999"
+    }
+  }
+}

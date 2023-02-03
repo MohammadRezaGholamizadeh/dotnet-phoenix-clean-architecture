@@ -19,6 +19,7 @@ using Phoenix.Infrastructure.OpenApi;
 using Phoenix.Infrastructure.Persistence;
 using Phoenix.Infrastructure.Persistence.Initialization;
 using Phoenix.Infrastructure.SecurityHeaders;
+using Phoenix.Infrastructure.SeedDatas;
 using Phoenix.SharedConfiguration.Common.Contracts.UnitOfWorks;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -95,7 +96,7 @@ public static class Startup
     public static IServiceCollection AddUnitOfWork(
     this IServiceCollection services)
     {
-       return services.AddScoped<UnitOfWork, EFUnitOfWork>();
+        return services.AddScoped<UnitOfWork, EFUnitOfWork>();
     }
 
     public static IApplicationBuilder UseInfrastructure(
@@ -122,7 +123,8 @@ public static class Startup
             .UseCurrentUser()
             .UseRequestLogging(config)
             .UseHangfireDashboard(config)
-            .UseOpenApiDocumentation(config);
+            .UseOpenApiDocumentation(config)
+            .UseSeedData(config).Wait();
         return builder;
     }
 

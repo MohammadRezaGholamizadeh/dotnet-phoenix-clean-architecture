@@ -13,7 +13,7 @@ namespace Phoenix.Migrations
         }
         public static void RunRootMigrations(string[] args)
         {
-            var options = GetSettings(args, Directory.GetCurrentDirectory());
+            var options = GetSettings(args, Path.GetDirectoryName(typeof(MigrationRunner).Assembly.Location));
 
             var connectionString = options.ConnectionString;
 
@@ -77,7 +77,7 @@ namespace Phoenix.Migrations
             var configurations = new ConfigurationBuilder()
                 .SetBasePath(baseDir)
                 .AddJsonFile(
-                    "appsettings.json",
+                    "databaseConfig.json",
                     optional: true,
                     reloadOnChange: true)
                 .AddEnvironmentVariables()

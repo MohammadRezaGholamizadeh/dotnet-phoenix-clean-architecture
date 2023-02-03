@@ -1,0 +1,8 @@
+{
+  "JwtBearerTokenConfig": {
+    "SecretKey": "PhoenixEncryptionKey",
+    "Issuer": "http://localhost:5000",
+    "Audience": "http://localhost:5000",
+    "ExpiryTimeInSeconds": 3600
+  }
+}

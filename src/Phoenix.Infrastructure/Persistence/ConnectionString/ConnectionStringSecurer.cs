@@ -4,57 +4,58 @@ using Phoenix.Application.Common.Persistence;
 using Phoenix.Infrastructure.Common;
 using System.Data.SqlClient;
 
-namespace Phoenix.Infrastructure.Persistence.ConnectionString;
-
-public class ConnectionStringSecurer : IConnectionStringSecurer
+namespace Phoenix.Infrastructure.Persistence.ConnectionString
 {
-    private const string HiddenValueDefault = "*******";
-    private readonly DatabaseSettings _dbSettings;
-
-    public ConnectionStringSecurer(IOptions<DatabaseSettings> dbSettings) =>
-        _dbSettings = dbSettings.Value;
-
-    public string? MakeSecure(string? connectionString, string? dbProvider)
+    public class ConnectionStringSecurer : IConnectionStringSecurer
     {
-        if (connectionString == null || string.IsNullOrEmpty(connectionString))
+        private const string HiddenValueDefault = "*******";
+        private readonly DatabaseSettings _dbSettings;
+
+        public ConnectionStringSecurer(IOptions<DatabaseSettings> dbSettings) =>
+            _dbSettings = dbSettings.Value;
+
+        public string? MakeSecure(string? connectionString, string? dbProvider)
         {
-            return connectionString;
+            if (connectionString == null || string.IsNullOrEmpty(connectionString))
+            {
+                return connectionString;
+            }
+
+            if (string.IsNullOrWhiteSpace(dbProvider))
+            {
+                dbProvider = _dbSettings.DBProvider;
+            }
+
+            return dbProvider?.ToLower() switch
+            {
+                DbProviderKeys.SqlServer => MakeSecureSqlConnectionString(connectionString),
+                DbProviderKeys.SqLite => MakeSecureSqLiteConnectionString(connectionString),
+                _ => connectionString
+            };
         }
 
-        if (string.IsNullOrWhiteSpace(dbProvider))
+        private string MakeSecureSqlConnectionString(string connectionString)
         {
-            dbProvider = _dbSettings.DBProvider;
+            var builder = new SqlConnectionStringBuilder(connectionString);
+
+            if (!string.IsNullOrEmpty(builder.Password) || !builder.IntegratedSecurity)
+            {
+                builder.Password = HiddenValueDefault;
+            }
+
+            if (!string.IsNullOrEmpty(builder.UserID) || !builder.IntegratedSecurity)
+            {
+                builder.UserID = HiddenValueDefault;
+            }
+
+            return builder.ToString();
         }
 
-        return dbProvider?.ToLower() switch
+        private string MakeSecureSqLiteConnectionString(string connectionString)
         {
-            DbProviderKeys.SqlServer => MakeSecureSqlConnectionString(connectionString),
-            DbProviderKeys.SqLite => MakeSecureSqLiteConnectionString(connectionString),
-            _ => connectionString
-        };
-    }
+            var builder = new SqliteConnection(connectionString);
 
-    private string MakeSecureSqlConnectionString(string connectionString)
-    {
-        var builder = new SqlConnectionStringBuilder(connectionString);
-
-        if (!string.IsNullOrEmpty(builder.Password) || !builder.IntegratedSecurity)
-        {
-            builder.Password = HiddenValueDefault;
+            return builder.ToString();
         }
-
-        if (!string.IsNullOrEmpty(builder.UserID) || !builder.IntegratedSecurity)
-        {
-            builder.UserID = HiddenValueDefault;
-        }
-
-        return builder.ToString();
-    }
-
-    private string MakeSecureSqLiteConnectionString(string connectionString)
-    {
-        var builder = new SqliteConnection(connectionString);
-
-        return builder.ToString();
     }
 }

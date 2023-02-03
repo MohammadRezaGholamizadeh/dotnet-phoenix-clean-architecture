@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 
 using Phoenix.Migrations;
 
-namespace Phoenix.Infrastructure.Persistence.Initialization;
-
+namespace Phoenix.Infrastructure.Persistence.Initialization
+{
 internal class DatabaseInitializer : IDatabaseInitializer
 {
     private readonly ILogger<DatabaseInitializer> _logger;
@@ -32,4 +32,5 @@ internal class DatabaseInitializer : IDatabaseInitializer
             "*******  | DataBase Migration Updated Successfully | *******" +
             Environment.NewLine);
     }
+}
 }
