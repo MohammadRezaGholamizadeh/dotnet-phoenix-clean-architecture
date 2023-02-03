@@ -1,6 +1,7 @@
-namespace Phoenix.Infrastructure.Persistence.Initialization;
-
-public interface ICustomSeeder
+namespace Phoenix.Infrastructure.Persistence.Initialization
 {
-    Task InitializeAsync(CancellationToken cancellationToken);
+    public interface ICustomSeeder
+    {
+        Task InitializeAsync(CancellationToken cancellationToken);
+    }
 }

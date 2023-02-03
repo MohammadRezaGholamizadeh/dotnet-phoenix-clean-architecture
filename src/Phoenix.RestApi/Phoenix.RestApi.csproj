@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +18,8 @@
 
 	<ItemGroup>
 		<Content Remove="Configurations\apiversioningconfig.json" />
+		<Content Remove="Configurations\JwtBearerTokenConfig.json" />
+		<Content Remove="Configurations\seedDatas.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,7 +28,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,6 +39,14 @@
 		<EmbeddedResource Include="Configurations\apiversioningconfig.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Configurations\seedDatas.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Configurations\jwtBearerTokenConfig.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Configurations\cacheconfig.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -105,8 +115,6 @@
 		<PackageReference Include="Serilog.Sinks.SQLite" Version="5.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
-		<PackageReference Include="Taav.Infrastructure" Version="3.1.0" />
-		<PackageReference Include="Taav.Notification" Version="3.1.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Files\" />

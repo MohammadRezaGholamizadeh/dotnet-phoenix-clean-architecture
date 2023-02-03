@@ -1,26 +1,28 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Phoenix.DataSources.Infrastructures.DBContexts;
-using Phoenix.SharedConfiguration.Common.ApplicationUsers;
+using Phoenix.Domain.Entities.ApplicationUsers;
 
 namespace Phoenix.Infrastructure.Identity;
 
 internal static class Startup
 {
-    internal static IServiceCollection AddIdentity(this IServiceCollection services)
+    internal static IServiceCollection AddIdentity(
+        this IServiceCollection services)
     {
-        return services
-            .AddIdentity<ApplicationUser, ApplicationRoles>(options =>
+        services
+            .AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                options.Password.RequiredLength = 6;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
+                options.User.AllowedUserNameCharacters = "1234567890";
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireDigit = false;
+                options.Lockout.AllowedForNewUsers = false;
             })
             .AddEntityFrameworkStores<EFDataContext>()
-            .AddDefaultTokenProviders()
-            .Services;
+            .AddDefaultTokenProviders();
+        return services;
     }
 }

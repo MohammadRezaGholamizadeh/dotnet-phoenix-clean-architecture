@@ -5,47 +5,48 @@ using System.Data.SqlClient;
 using Phoenix.Infrastructure.Common;
 using Phoenix.Application.Common.Persistence;
 
-namespace Phoenix.Infrastructure.Persistence.ConnectionString;
-
-internal class ConnectionStringValidator : IConnectionStringValidator
+namespace Phoenix.Infrastructure.Persistence.ConnectionString
 {
-    private readonly DatabaseSettings _dbSettings;
-    private readonly ILogger<ConnectionStringValidator> _logger;
-
-    public ConnectionStringValidator(
-        IOptions<DatabaseSettings> dbSettings,
-        ILogger<ConnectionStringValidator> logger)
+    internal class ConnectionStringValidator : IConnectionStringValidator
     {
-        _dbSettings = dbSettings.Value;
-        _logger = logger;
-    }
+        private readonly DatabaseSettings _dbSettings;
+        private readonly ILogger<ConnectionStringValidator> _logger;
 
-    public bool TryValidate(string connectionString, string? dbProvider = null)
-    {
-        if (string.IsNullOrWhiteSpace(dbProvider))
+        public ConnectionStringValidator(
+            IOptions<DatabaseSettings> dbSettings,
+            ILogger<ConnectionStringValidator> logger)
         {
-            dbProvider = _dbSettings.DBProvider;
+            _dbSettings = dbSettings.Value;
+            _logger = logger;
         }
 
-        try
+        public bool TryValidate(string connectionString, string? dbProvider = null)
         {
-            switch (dbProvider?.ToLowerInvariant())
+            if (string.IsNullOrWhiteSpace(dbProvider))
             {
-                case DbProviderKeys.SqlServer:
-                    var mssqlcs = new SqlConnectionStringBuilder(connectionString);
-                    break;
-
-                case DbProviderKeys.SqLite:
-                    var sqlite = new SqliteConnection(connectionString);
-                    break;
+                dbProvider = _dbSettings.DBProvider;
             }
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Connection String Validation Exception : {ex.Message}");
-            return false;
+            try
+            {
+                switch (dbProvider?.ToLowerInvariant())
+                {
+                    case DbProviderKeys.SqlServer:
+                        var mssqlcs = new SqlConnectionStringBuilder(connectionString);
+                        break;
+
+                    case DbProviderKeys.SqLite:
+                        var sqlite = new SqliteConnection(connectionString);
+                        break;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Connection String Validation Exception : {ex.Message}");
+                return false;
+            }
         }
     }
 }

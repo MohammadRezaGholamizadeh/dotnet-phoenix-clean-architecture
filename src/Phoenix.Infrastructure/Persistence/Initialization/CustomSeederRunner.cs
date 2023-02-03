@@ -1,23 +1,24 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Phoenix.Infrastructure.Persistence.Initialization;
-
-internal class CustomSeederRunner
+namespace Phoenix.Infrastructure.Persistence.Initialization
 {
-    private readonly ICustomSeeder[] _customSeeders;
-
-    public CustomSeederRunner(IServiceProvider serviceProvider)
+    internal class CustomSeederRunner
     {
-        _customSeeders = 
-            serviceProvider.GetServices<ICustomSeeder>().ToArray();
-    }
+        private readonly ICustomSeeder[] _customSeeders;
 
-    public async Task RunCustomSeederAsync(
-        CancellationToken cancellationToken)
-    {
-        foreach (var seeder in _customSeeders)
+        public CustomSeederRunner(IServiceProvider serviceProvider)
         {
-            await seeder.InitializeAsync(cancellationToken);
+            _customSeeders =
+                serviceProvider.GetServices<ICustomSeeder>().ToArray();
+        }
+
+        public async Task RunCustomSeederAsync(
+            CancellationToken cancellationToken)
+        {
+            foreach (var seeder in _customSeeders)
+            {
+                await seeder.InitializeAsync(cancellationToken);
+            }
         }
     }
 }

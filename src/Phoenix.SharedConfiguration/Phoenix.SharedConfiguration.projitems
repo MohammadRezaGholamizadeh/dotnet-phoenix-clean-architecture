@@ -15,9 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixClaims.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixPermissions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\PhoenixRoles.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationRoleClaim.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationRoles.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\ApplicationUser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationUsers\RegisterUserEmailModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\AuditableEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\BaseEntity.cs" />
@@ -28,6 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\ISoftDelete.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\ScopedRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\SingletonRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Builder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\MobileNumberAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validators\NationalCodeValidator.cs" />
     <Compile Include="..\Phoenix.SharedConfiguration\Common\Contracts\Repositories\TransientRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Services\SingletonService.cs" />
     <Compile Include="..\Phoenix.SharedConfiguration\Common\Contracts\Services\TransientService.cs" />

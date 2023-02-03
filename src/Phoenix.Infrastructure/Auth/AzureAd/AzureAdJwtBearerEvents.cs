@@ -5,9 +5,9 @@ using Microsoft.Identity.Web;
 using Serilog;
 
 using Phoenix.Application.Common.Exceptions;
-using Phoenix.Application.Identity.Users;
 using System.Security.Claims;
 using Phoenix.DataSources.Infrastructures.DBContexts;
+using Phoenix.Application.Services.ApplicationUsers.Contracts;
 
 namespace Phoenix.Infrastructure.Auth.AzureAd;
 
@@ -56,7 +56,7 @@ internal class AzureAdJwtBearerEvents : JwtBearerEvents
         var identity = principal.Identities.First();
 
         // Lookup local user or create one if none exist.
-        string userId = await context.HttpContext.RequestServices.GetRequiredService<IUserService>()
+        string userId = await context.HttpContext.RequestServices.GetRequiredService<ApplicationUserService>()
             .GetOrCreateFromPrincipalAsync(principal);
 
         // We use the nameidentifier claim to store the user id.

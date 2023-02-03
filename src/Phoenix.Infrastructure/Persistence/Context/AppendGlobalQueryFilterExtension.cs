@@ -2,35 +2,36 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace Phoenix.Infrastructure.Persistence.Context;
-
-internal static class ModelBuilderExtensions
+namespace Phoenix.Infrastructure.Persistence.Context
 {
-    public static ModelBuilder AppendGlobalQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> filter)
+    internal static class ModelBuilderExtensions
     {
-        // get a list of entities without a baseType that implement the interface TInterface
-        var entities = modelBuilder.Model.GetEntityTypes()
-            .Where(e => e.BaseType is null && e.ClrType.GetInterface(typeof(TInterface).Name) is not null)
-            .Select(e => e.ClrType);
-
-        foreach (var entity in entities)
+        public static ModelBuilder AppendGlobalQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> filter)
         {
-            var parameterType = Expression.Parameter(modelBuilder.Entity(entity).Metadata.ClrType);
-            var filterBody = ReplacingExpressionVisitor.Replace(filter.Parameters.Single(), parameterType, filter.Body);
+            // get a list of entities without a baseType that implement the interface TInterface
+            var entities = modelBuilder.Model.GetEntityTypes()
+                .Where(e => e.BaseType is null && e.ClrType.GetInterface(typeof(TInterface).Name) is not null)
+                .Select(e => e.ClrType);
 
-            // get the existing query filter
-            if (modelBuilder.Entity(entity).Metadata.GetQueryFilter() is { } existingFilter)
+            foreach (var entity in entities)
             {
-                var existingFilterBody = ReplacingExpressionVisitor.Replace(existingFilter.Parameters.Single(), parameterType, existingFilter.Body);
+                var parameterType = Expression.Parameter(modelBuilder.Entity(entity).Metadata.ClrType);
+                var filterBody = ReplacingExpressionVisitor.Replace(filter.Parameters.Single(), parameterType, filter.Body);
 
-                // combine the existing query filter with the new query filter
-                filterBody = Expression.AndAlso(existingFilterBody, filterBody);
+                // get the existing query filter
+                if (modelBuilder.Entity(entity).Metadata.GetQueryFilter() is { } existingFilter)
+                {
+                    var existingFilterBody = ReplacingExpressionVisitor.Replace(existingFilter.Parameters.Single(), parameterType, existingFilter.Body);
+
+                    // combine the existing query filter with the new query filter
+                    filterBody = Expression.AndAlso(existingFilterBody, filterBody);
+                }
+
+                // apply the new query filter
+                modelBuilder.Entity(entity).HasQueryFilter(Expression.Lambda(filterBody, parameterType));
             }
 
-            // apply the new query filter
-            modelBuilder.Entity(entity).HasQueryFilter(Expression.Lambda(filterBody, parameterType));
+            return modelBuilder;
         }
-
-        return modelBuilder;
     }
 }

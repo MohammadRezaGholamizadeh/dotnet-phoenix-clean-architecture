@@ -23,6 +23,8 @@ internal static class Configurations
             .AddJsonFile("securityheadersconfig.json", optional: true, reloadOnChange: true)
             .AddJsonFile("signalrconfig.json", optional: true, reloadOnChange: true)
             .AddJsonFile("apiversioningconfig.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("jwtBearerTokenConfig.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("seedDatas.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
         });
