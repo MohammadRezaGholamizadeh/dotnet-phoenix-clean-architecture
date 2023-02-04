@@ -4,9 +4,12 @@ using Phoenix.SharedConfiguration.Common.Contracts.Services;
 using System.Security.Claims;
 namespace Phoenix.Application.Services.ApplicationUsers.Contracts
 {
-    public interface ApplicationUserService : ScopedService 
+    public interface ApplicationUserService : ScopedService
     {
         Task<string> AddUser(AddApplicationUserDto dto);
+        Task<List<GetUserTenantDto>> GetAllUserTenants(string userName);
+        Task<string> AddSuperAdminUserForSeedData(
+                    ApplicationUser adminUser);
         Task<ApplicationUser> FindByUsername(string username);
         Task<GetApplicationUserDto> GetUserById(string id);
         Task<List<GetApplicationUserDto>> GetAllUsers();
@@ -17,7 +20,7 @@ namespace Phoenix.Application.Services.ApplicationUsers.Contracts
         Task UpdateUser(string userId, UpdateApplicationUserDto appUserUpdateDto);
         Task UpdatePassword(string id, UpdatePasswordDto dto);
         Task<IdentityResult> AddUserToAdminRole(string UserId);
-        Task<bool> IsExistNationalCcode(string nationalCode);
+        Task<bool> IsExistNationalCode(string nationalCode);
         Task<IdentityResult> DeleteUserFromAdminRole(string UserId);
         Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal);
         Task<ApplicationUser> ValidateUser(string username, string password);

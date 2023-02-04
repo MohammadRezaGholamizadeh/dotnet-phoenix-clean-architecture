@@ -25,6 +25,7 @@ namespace Phoenix.Persistance.EF.Repositories.ApplicationUsers
                       .SingleOrDefaultAsync(
                             _ => _.NationalCode == nationalCode);
         }
+
         public async Task<string?> GetUserIdByNationalCode(string nationalCode)
         {
             var applicationUser =
@@ -33,6 +34,7 @@ namespace Phoenix.Persistance.EF.Repositories.ApplicationUsers
                             _ => _.NationalCode == nationalCode);
             return applicationUser?.Id;
         }
+
         public async Task<bool> IsDuplicateNationalCode(
             string userId,
             string nationalCode)
@@ -121,9 +123,23 @@ namespace Phoenix.Persistance.EF.Repositories.ApplicationUsers
                    .SingleOrDefault(_ => _.NormalizedName == roleName.ToUpper())?.Id;
         }
 
-        public async Task<bool> IsExistByNationalCode(string nationalCode)
+        public async Task<bool> IsExistByNationalCodeInAllTenants(string nationalCode)
         {
-            return await _applicationUsers.AnyAsync(_ => _.NationalCode == nationalCode);
+            return await _applicationUsers.IgnoreQueryFilters().AnyAsync(_ => _.NationalCode == nationalCode);
+        }
+
+        public async Task<List<GetUserTenantDto>> GetAllUserTenants(string userName)
+        {
+            return await _applicationUsers
+                         .Include(_ => _.Tenant)
+                         .IgnoreQueryFilters()
+                         .Where(_ => _.UserName == userName)
+                         .Select(_ => new GetUserTenantDto()
+                         {
+                             Name = _.Tenant.Name,
+                             TenantId = _.TenantId,
+                             IsTenantBeActive = _.Tenant.IsActive
+                         }).ToListAsync();
         }
     }
 }

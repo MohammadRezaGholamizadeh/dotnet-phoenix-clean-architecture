@@ -17,6 +17,7 @@ namespace Phoenix.Application.Services.ApplicationUsers.Contracts
         Task<ApplicationUser?> FindUserById(string id);
         Task<bool> isExist(string userId);
         string? GetRoleId(string roleName);
-        Task<bool> IsExistByNationalCode(string nationalCode);
+        Task<bool> IsExistByNationalCodeInAllTenants(string nationalCode);
+        Task<List<GetUserTenantDto>> GetAllUserTenants(string userName);
     }
 }

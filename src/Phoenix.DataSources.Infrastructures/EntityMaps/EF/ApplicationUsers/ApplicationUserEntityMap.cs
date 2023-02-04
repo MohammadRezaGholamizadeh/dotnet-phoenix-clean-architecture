@@ -29,6 +29,10 @@ namespace Phoenix.DataSources.Infrastructures.EntityMaps.EF.ApplicationUsers
                      .HasMaxLength(11).IsRequired(false)
                      .HasColumnName("Mobile_Number");
             });
+            _.Property(_ => _.TenantId).IsRequired();
+            _.HasOne(_ => _.Tenant).WithMany(_ => _.Users)
+                .HasForeignKey(_ => _.TenantId)
+                .OnDelete(DeleteBehavior.Cascade);
             _.Ignore(_ => _.Email)
              .Ignore(_ => _.EmailConfirmed)
              .Ignore(_ => _.NormalizedEmail)

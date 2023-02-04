@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Phoenix.Application.Services.ApplicationUsers.Contracts;
 using Phoenix.DataSources.Infrastructures.DBContexts;
 using Phoenix.Domain.Entities.ApplicationUsers;
+using Phoenix.Domain.Entities.Tenants;
 
 namespace Phoenix.Infrastructure.SeedDatas
 {
@@ -13,9 +14,8 @@ namespace Phoenix.Infrastructure.SeedDatas
             this IApplicationBuilder applicationBuilder,
             IConfiguration configuration)
         {
-            var roles = new List<string>();
-            var config = new ApplicationUser();
-            configuration.GetSection("AdminSeedData").Bind(config);
+            var superAdminConfig = new ApplicationUser();
+            configuration.GetSection("SuperAdminSeedData").Bind(superAdminConfig);
             using (var scope = applicationBuilder.ApplicationServices.CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<EFDataContext>();
@@ -35,20 +35,43 @@ namespace Phoenix.Infrastructure.SeedDatas
                     });
                     await context.SaveChangesAsync();
                 }
-                var service =
-                    scope.ServiceProvider.GetRequiredService<ApplicationUserService>();
-                if (!await service.IsExistNationalCcode(config.NationalCode))
+                var applicationUserService =
+                scope.ServiceProvider.GetRequiredService<ApplicationUserService>();
+                if (!await applicationUserService.IsExistNationalCode(superAdminConfig.NationalCode))
                 {
                     var userId =
-                        await service.AddUser(new AddApplicationUserDto()
-                        {
-                            FirstName = config.FirstName,
-                            LastName = config.LastName,
-                            NationalCode = config.NationalCode,
-                            CountryCallingCode = config.Mobile.CountryCallingCode,
-                            MobileNumber = config.Mobile.MobileNumber
-                        });
-                    await service.AddUserToAdminRole(userId);
+                        await applicationUserService
+                        .AddSuperAdminUserForSeedData(
+                            new ApplicationUser()
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                FirstName = superAdminConfig.FirstName,
+                                LastName = superAdminConfig.LastName,
+                                UserName = superAdminConfig.UserName,
+                                NationalCode = superAdminConfig.NationalCode,
+                                Mobile = new Mobile()
+                                {
+                                    CountryCallingCode =   
+                                        superAdminConfig.Mobile.CountryCallingCode,
+                                    MobileNumber = 
+                                        superAdminConfig.Mobile.MobileNumber,
+                                },
+                                Tenant = new Tenant()
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Email = superAdminConfig.Tenant.Email,
+                                    IsActive = true,
+                                    Name = superAdminConfig.Tenant.Name,
+                                    Mobile = new Mobile()
+                                    {
+                                        MobileNumber = 
+                                            superAdminConfig.Tenant.Mobile.MobileNumber,
+                                        CountryCallingCode =   
+                                            superAdminConfig.Tenant.Mobile.CountryCallingCode
+                                    }
+                                }
+                            });
+                    await applicationUserService.AddUserToAdminRole(userId);
                 }
             }
             return applicationBuilder;

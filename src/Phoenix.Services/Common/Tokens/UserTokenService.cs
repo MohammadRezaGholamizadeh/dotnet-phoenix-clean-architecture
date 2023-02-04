@@ -3,7 +3,7 @@ using Phoenix.Domain.Entities.ApplicationUsers;
 using Phoenix.SharedConfiguration.Common.Contracts.Services;
 using System.Security.Claims;
 
-namespace Phoenix.Infrastructure.Tokens
+namespace Phoenix.Application.Common.Tokens
 {
     public interface UserTokenService : ScopedService
     {
@@ -11,6 +11,7 @@ namespace Phoenix.Infrastructure.Tokens
         IList<string> Roles { get; }
         bool Admin { get; }
         bool Guest { get; }
+        public string TenantId { get; }
 
     }
 
@@ -39,7 +40,24 @@ namespace Phoenix.Infrastructure.Tokens
         public bool Admin => Roles.Any(_ => _ == SystemRoles.Admin);
         public bool Guest => Roles.Any(_ => _ == SystemRoles.Guest);
 
+        public string TenantId => GetTenantIdFromHeader();
 
+        private string GetTenantIdFromHeader()
+        {
+            if (_accessor.HttpContext != null)
+            {
+                return _accessor
+                       .HttpContext
+                       .Request
+                       .Headers
+                       .SingleOrDefault(_ => _.Key.ToLower()
+                                          == "tenantid").Value;
+            }
+            else
+            {
+                return default;
+            }
+        }
         private string? GetUserIdFromJwtToken()
         {
             return _accessor.HttpContext?

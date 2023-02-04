@@ -22,7 +22,7 @@ namespace Phoenix.Infrastructure.Persistence
                       .UseDatabase(
                           databaseSettings.DBProvider,
                           databaseSettings.ConnectionString);
-                });
+                }, ServiceLifetime.Transient);
         }
     }
 }

@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Phoenix.Entities\Phoenix.Domain.csproj" />
+		<ProjectReference Include="..\Phoenix.Services\Phoenix.Application.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />

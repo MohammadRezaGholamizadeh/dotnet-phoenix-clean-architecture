@@ -1,5 +1,5 @@
 {
   "PersistenceConfig": {
-    "ConnectionString": "server=.;database=PhoenixDb;Trusted_Connection = true"
+    "ConnectionString": "server=.;database=PhoenixDb-SpecTest;Trusted_Connection = true"
   }
 }

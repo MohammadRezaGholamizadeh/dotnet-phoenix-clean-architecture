@@ -9,6 +9,7 @@
     <Import_RootNamespace>Phoenix.SharedConfiguration</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\ServiceGuardExceptionAttributes\ServiceGuardExceptionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Audit\Trail.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Audit\TrailType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authorization\ClaimsPrincipalExtensions.cs" />
@@ -25,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\ISoftDelete.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\ScopedRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Contracts\Repositories\SingletonRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Multitenancy\ITenant.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\Builder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validators\MobileNumberAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Validators\NationalCodeValidator.cs" />
