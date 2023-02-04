@@ -89,5 +89,13 @@ namespace Phoenix.RestApi.Controllers.ApplicationUsers
         {
             return await _service.GetUserById(_userTokenService.UserId);
         }
+
+        [HttpGet("{userName}/all-tenants")]
+        [JumpOverMiddleWare]
+        public async Task<List<GetUserTenantDto>> GetAllUserTenants(
+            string userName)
+        {
+            return await _service.GetAllUserTenants(userName);
+        }
     }
 }

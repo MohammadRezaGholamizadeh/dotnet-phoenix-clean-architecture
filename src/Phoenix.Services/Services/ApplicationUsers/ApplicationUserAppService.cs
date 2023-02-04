@@ -63,6 +63,7 @@ namespace Phoenix.Application.Services.ApplicationUsers
                 .With(_ => _.FirstName, dto.FirstName)
                 .With(_ => _.LastName, dto.LastName)
                 .With(_ => _.TenantId, _userTokenService.TenantId)
+                .With(_ => _.CreationDate, DateTime.UtcNow)
                 .With(_ => _.Mobile, new Mobile()
                 {
                     CountryCallingCode = dto.CountryCallingCode,
@@ -263,6 +264,11 @@ namespace Phoenix.Application.Services.ApplicationUsers
         public async Task<bool> IsExistNationalCode(string nationalCode)
         {
             return await _repository.IsExistByNationalCodeInAllTenants(nationalCode);
+        }
+
+        public async Task<List<GetUserTenantDto>> GetAllUserTenants(string userName)
+        {
+            return await _repository.GetAllUserTenants(userName);
         }
     }
 }

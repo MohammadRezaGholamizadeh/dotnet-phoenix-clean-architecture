@@ -313,5 +313,35 @@ namespace Phoenix.IntegrationTests.ServiceTests.Tenants
                 .Should().Be(tenant.Mobile.CountryCallingCode);
             expected.Single().IsActive.Should().BeTrue();
         }
+
+        [Fact]
+        public async Task Update_toggleTenantActivationStatus_properly()
+        {
+            var tenant =
+                await new Builder<Tenant>()
+                .With(_ => _.Id, Guid.NewGuid().ToString())
+                .With(_ => _.Name, "dummy")
+                .With(_ => _.Email, "dummy@gmail.com")
+                .With(_ => _.IsActive, true)
+                .With(_ => _.Mobile, new Mobile()
+                {
+                    CountryCallingCode = "+98",
+                    MobileNumber = "9179999999"
+                })
+                .BuildAndSaveInDataBase(Context);
+
+            await Sut.ToggleActivationStatus(tenant.Id);
+
+            var expected = await Context.Set<Tenant>().ToListAsync();
+            expected.Single().Name
+                    .Should().Be(tenant.Name);
+            expected.Single().Email
+                .Should().Be(tenant.Email);
+            expected.Single().Mobile.MobileNumber
+                .Should().Be(tenant.Mobile.MobileNumber);
+            expected.Single().Mobile.CountryCallingCode
+                .Should().Be(tenant.Mobile.CountryCallingCode);
+            expected.Single().IsActive.Should().BeFalse();
+        }
     }
 }

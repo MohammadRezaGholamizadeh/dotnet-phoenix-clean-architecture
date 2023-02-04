@@ -7,8 +7,9 @@ namespace Phoenix.Application.Services.ApplicationUsers.Contracts
     public interface ApplicationUserService : ScopedService
     {
         Task<string> AddUser(AddApplicationUserDto dto);
+        Task<List<GetUserTenantDto>> GetAllUserTenants(string userName);
         Task<string> AddSuperAdminUserForSeedData(
-            ApplicationUser adminUser);
+                    ApplicationUser adminUser);
         Task<ApplicationUser> FindByUsername(string username);
         Task<GetApplicationUserDto> GetUserById(string id);
         Task<List<GetApplicationUserDto>> GetAllUsers();

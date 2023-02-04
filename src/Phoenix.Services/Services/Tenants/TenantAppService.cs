@@ -68,6 +68,16 @@ namespace Phoenix.Application.Services.Tenants
             return await _repository.IsActiveById(tenantId);
         }
 
+        public async Task ToggleActivationStatus(string id)
+        {
+            var targetTenant =
+                await _repository.FindById(id);
+            GuardAgainstTenantNotExist(targetTenant);
+            targetTenant!.IsActive = !targetTenant.IsActive;
+
+            await _unitOfWork.SaveAllChangesAsync();
+        }
+
         public async Task Update(string id, UpdateTenantDto dto)
         {
             var targetTenant =

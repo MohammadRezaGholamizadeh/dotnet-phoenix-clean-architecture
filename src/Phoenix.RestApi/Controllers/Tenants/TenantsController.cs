@@ -38,5 +38,19 @@ namespace Phoenix.RestApi.Controllers.Tenants
         {
             return await _tenantService.GetById(id);
         }
+
+        [HttpGet("all", Name = "GetAllTenants")]
+        public async Task<List<GetTenantDto>?> GetAll()
+        {
+            return await _tenantService.GetAll();
+        }
+
+        [HttpPatch(
+            "{id}/toggling-activation-status",
+            Name = "ToogleTenantActivationStatus")]
+        public async Task ToggleActivationstatus(string id)
+        {
+            await _tenantService.ToggleActivationStatus(id);
+        }
     }
 }
